@@ -28,19 +28,13 @@ def main():
     page_ = args.page
     
     # Creating name of the file and route for them
-    filename = date_+'_'+page_
-    print(date_)
-    print(filename)
+    filename = 'sales_'+date_+'_'+page_
 
-    print(raw_dir)
     raw_dir_ = str(raw_dir)+'/'+str(date_)
     stg_dir_ = str(stg_dir)+'/'+str(date_)
     filename_ = raw_dir_+'/'+str(filename)+'.json'
     filename_avro = str(stg_dir_)+'/'+str(filename)+'.avro'
     filename_avro_ = Path(filename_avro)
-    print(raw_dir_)
-    print(filename_)
-    print(filename_avro_)
 
     # Check if folder doesn't exist - create it
     isExistFolder = os.path.exists(raw_dir_)
