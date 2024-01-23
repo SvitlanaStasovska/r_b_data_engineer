@@ -36,19 +36,11 @@ BASE_URL = vars['BASE_URL']
 raw_dir =  vars['raw_dir']
 stg_dir =  vars['stg_dir']
 
-#  1. task_id=”extract_data_from_api”, яка трігає першу джобу з завдання 2
-#  2. task_id=”convert_to_avro”, яка трігає другу джобу з завдання 2
+#  1. task_id=load_files_from_api, яка трігає першу джобу з завдання 2
+#  2. task_id=convert_files_avro, яка трігає другу джобу з завдання 2
 
 def extract_data_from_api():
 
-    # Adjusting parser and parser arguments to retrieve data from API
-    #parser = argparse.ArgumentParser(description="Lesson_2 Getting data from API and putting args into the folders raw_dir and stg_dir")
-    #parser.add_argument("date", help="date to get data from the API")
-    #parser.add_argument("page", help="page number to get data from the API")
-    #args = parser.parse_args()
-
-    #date_ = args.date
-    #page_ = args.page
     
     date_ = Variable.get("date_")
     page_ = Variable.get("page_")
@@ -94,19 +86,12 @@ def extract_data_from_api():
             headers={'Authorization': AUTH_TOKEN},
             )
             
-    logging.info(f'response_status_code: {response.status_code}')   
-
-    #logging.info(response.json())    
+    logging.info(f'response_status_code: {response.status_code}')    
     
 
     if (str(response.json()).find("ValueError") > 0 or response.status_code != 200) :
         print(f"There is no data on your demand on date : {date_} and page : {page_}")
         sys.exit(0)
-
-    logging.info(filename_)
-    current_dir = os.getcwd()
-    logging.info(current_dir)
-    logging.info(sys.path)
     
     f = open("r_b_wr.csv", "w")
 
@@ -123,7 +108,7 @@ def convert_to_avro():
     with open(filename_avro_, 'wb') as file_avro:
         writer(file_avro, schema.parse_schema(rec_avro_schema()), avroObjects)
     
-    logging.info('Convert into AVRO !')
+    logging.info('Converted into AVRO !')
 
 from airflow import DAG
 from datetime import datetime
@@ -133,9 +118,9 @@ with DAG(
     DAG_ID,
     default_args = args,
     description = "Get files from api and convert into AVRO-format",
-    schedule_interval = '22 * * * * ',
-    start_date = datetime(2022, 7, 31, 22, 0, 0),
-    catchup = False,
+    schedule_interval = '0 1 * * * ',
+    start_date = datetime(2024, 1, 1, 22, 0, 0),
+    catchup = True,
     tags = ['avro','files','json']
 ) as dag:
 

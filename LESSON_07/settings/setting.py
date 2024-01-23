@@ -5,4 +5,5 @@ vars = {
     'BASE_URL' : 'https://fake-api-vycpfa6oca-uc.a.run.app/sales',
     'raw_dir' : Path('/opt/airflow/dags/robo_dreams/file_storage/raw/sales'),
     'stg_dir' : Path('/opt/airflow/dags/robo_dreams/file_storage/stg/sales')
+
 }
